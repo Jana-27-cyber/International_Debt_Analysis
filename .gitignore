@@ -1,0 +1,11 @@
+# Large files
+data/final_master_dataset.csv
+data/cleaned_debt.csv
+international_debt.db
+
+# Python cache
+__pycache__/
+*.pyc
+
+# VS Code settings
+.vscode/
