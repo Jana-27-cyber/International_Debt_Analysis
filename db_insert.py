@@ -1,18 +1,23 @@
 import pandas as pd
 import sqlite3
 
-df = pd.read_csv("data/cleaned_debt.csv")
+CSV_FILE = "data/final_master_dataset.csv"
+DB_FILE = "international_debt.db"
+TABLE_NAME = "debt_data"
 
-conn = sqlite3.connect("international_debt.db")
+print("Reading final master dataset...")
+df = pd.read_csv(CSV_FILE)
 
-df.to_sql(
-    "debt_data",
-    conn,
-    if_exists="replace",
-    index=False
-)
+print("Columns:")
+print(df.columns.tolist())
+
+conn = sqlite3.connect(DB_FILE)
+
+print("Inserting data into SQLite...")
+df.to_sql(TABLE_NAME, conn, if_exists="replace", index=False)
 
 conn.close()
 
-print("Data inserted successfully!")
-print(df.shape)
+print("Database updated successfully!")
+print("Rows:", df.shape[0])
+print("Columns:", df.shape[1])

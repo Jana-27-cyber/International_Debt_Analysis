@@ -3,10 +3,7 @@ import pandas as pd
 import sqlite3
 import matplotlib.pyplot as plt
 
-st.set_page_config(
-    page_title="International Debt Analysis",
-    layout="wide"
-)
+st.set_page_config(page_title="International Debt Analysis", layout="wide")
 
 DB_PATH = "international_debt.db"
 
@@ -78,12 +75,82 @@ elif menu == "📊 Visual Analysis":
 
     st.header("📈 Visual Analysis")
 
-    st.subheader("Year-wise Total Debt Trend")
+    st.subheader("🔎 Filters")
 
-    year_data = run_query("""
+    regions = run_query("SELECT DISTINCT region FROM debt_data ORDER BY region;")
+    years = run_query("SELECT DISTINCT year FROM debt_data ORDER BY year;")
+    income_groups = run_query("SELECT DISTINCT income_group FROM debt_data ORDER BY income_group;")
+    countries = run_query("SELECT DISTINCT country_name FROM debt_data ORDER BY country_name;")
+
+    col1, col2, col3, col4 = st.columns(4)
+
+    with col1:
+        selected_region = st.selectbox(
+            "🌍 Select Region",
+            ["All"] + regions["region"].dropna().tolist()
+        )
+
+    with col2:
+        selected_year = st.selectbox(
+            "📅 Select Year",
+            ["All"] + years["year"].tolist()
+        )
+
+    with col3:
+        selected_income = st.selectbox(
+            "💼 Select Income Group",
+            ["All"] + income_groups["income_group"].dropna().tolist()
+        )
+
+    with col4:
+        selected_country = st.selectbox(
+            "🏳️ Select Country",
+            ["All"] + countries["country_name"].dropna().tolist()
+        )
+
+    conditions = []
+
+    if selected_region != "All":
+        safe_region = selected_region.replace("'", "''")
+        conditions.append(f"region = '{safe_region}'")
+
+    if selected_year != "All":
+        conditions.append(f"year = {selected_year}")
+
+    if selected_income != "All":
+        safe_income = selected_income.replace("'", "''")
+        conditions.append(f"income_group = '{safe_income}'")
+
+    if selected_country != "All":
+        safe_country = selected_country.replace("'", "''")
+        conditions.append(f"country_name = '{safe_country}'")
+
+    where_clause = ""
+    if conditions:
+        where_clause = "WHERE " + " AND ".join(conditions)
+
+    st.info(f"Applied Filter: {where_clause if where_clause else 'No Filter Applied'}")
+
+    st.subheader("📌 Filtered Data Preview")
+
+    filtered_sample = run_query(f"""
+    SELECT *
+    FROM debt_data
+    {where_clause}
+    LIMIT 100;
+    """)
+
+    st.dataframe(filtered_sample, use_container_width=True)
+
+    st.divider()
+
+    st.subheader("📈 Year-wise Total Debt Trend")
+
+    year_data = run_query(f"""
     SELECT year,
            SUM(debt_value) AS total_debt
     FROM debt_data
+    {where_clause}
     GROUP BY year
     ORDER BY year;
     """)
@@ -98,10 +165,11 @@ elif menu == "📊 Visual Analysis":
 
     st.subheader("🌍 Top 10 Countries by Total Debt")
 
-    top_countries = run_query("""
+    top_countries = run_query(f"""
     SELECT country_name,
            SUM(debt_value) AS total_debt
     FROM debt_data
+    {where_clause}
     GROUP BY country_name
     ORDER BY total_debt DESC
     LIMIT 10;
@@ -117,12 +185,55 @@ elif menu == "📊 Visual Analysis":
     plt.xticks(rotation=45, ha="right")
     st.pyplot(fig2)
 
+    st.subheader("🗺️ Region-wise Debt Distribution")
+
+    region_data = run_query(f"""
+    SELECT region,
+           SUM(debt_value) AS total_debt
+    FROM debt_data
+    {where_clause}
+    GROUP BY region
+    ORDER BY total_debt DESC;
+    """)
+
+    st.dataframe(region_data, use_container_width=True)
+
+    fig3, ax3 = plt.subplots(figsize=(12, 5))
+    ax3.bar(region_data["region"], region_data["total_debt"])
+    ax3.set_title("Region-wise Total Debt")
+    ax3.set_xlabel("Region")
+    ax3.set_ylabel("Total Debt")
+    plt.xticks(rotation=45, ha="right")
+    st.pyplot(fig3)
+
+    st.subheader("💼 Income Group-wise Debt Analysis")
+
+    income_data = run_query(f"""
+    SELECT income_group,
+           SUM(debt_value) AS total_debt
+    FROM debt_data
+    {where_clause}
+    GROUP BY income_group
+    ORDER BY total_debt DESC;
+    """)
+
+    st.dataframe(income_data, use_container_width=True)
+
+    fig4, ax4 = plt.subplots(figsize=(10, 5))
+    ax4.bar(income_data["income_group"], income_data["total_debt"])
+    ax4.set_title("Income Group-wise Total Debt")
+    ax4.set_xlabel("Income Group")
+    ax4.set_ylabel("Total Debt")
+    plt.xticks(rotation=45, ha="right")
+    st.pyplot(fig4)
+
     st.subheader("📊 Top 10 Debt Indicators")
 
-    top_indicators = run_query("""
+    top_indicators = run_query(f"""
     SELECT indicator_name,
            SUM(debt_value) AS total_debt
     FROM debt_data
+    {where_clause}
     GROUP BY indicator_name
     ORDER BY total_debt DESC
     LIMIT 10;
@@ -130,24 +241,13 @@ elif menu == "📊 Visual Analysis":
 
     st.dataframe(top_indicators, use_container_width=True)
 
-    fig3, ax3 = plt.subplots(figsize=(12, 5))
-    ax3.bar(top_indicators["indicator_name"], top_indicators["total_debt"])
-    ax3.set_title("Top 10 Debt Indicators")
-    ax3.set_xlabel("Indicator")
-    ax3.set_ylabel("Total Debt")
+    fig5, ax5 = plt.subplots(figsize=(12, 5))
+    ax5.bar(top_indicators["indicator_name"], top_indicators["total_debt"])
+    ax5.set_title("Top 10 Debt Indicators")
+    ax5.set_xlabel("Indicator")
+    ax5.set_ylabel("Total Debt")
     plt.xticks(rotation=45, ha="right")
-    st.pyplot(fig3)
-
-    st.subheader("🥧 Top 10 Countries Debt Share")
-
-    fig4, ax4 = plt.subplots(figsize=(8, 8))
-    ax4.pie(
-        top_countries["total_debt"],
-        labels=top_countries["country_name"],
-        autopct="%1.1f%%"
-    )
-    ax4.set_title("Debt Share of Top 10 Countries")
-    st.pyplot(fig4)
+    st.pyplot(fig5)
 
 
 # ================= SQL QUESTIONS =================
@@ -522,13 +622,13 @@ elif menu == "🔍 Country Analysis":
 
     st.dataframe(country_data, use_container_width=True)
 
-    fig5, ax5 = plt.subplots(figsize=(12, 5))
-    ax5.plot(country_data["year"], country_data["total_debt"], marker="o")
-    ax5.set_title(f"Debt Trend for {selected_country}")
-    ax5.set_xlabel("Year")
-    ax5.set_ylabel("Total Debt")
-    ax5.grid(True)
-    st.pyplot(fig5)
+    fig6, ax6 = plt.subplots(figsize=(12, 5))
+    ax6.plot(country_data["year"], country_data["total_debt"], marker="o")
+    ax6.set_title(f"Debt Trend for {selected_country}")
+    ax6.set_xlabel("Year")
+    ax6.set_ylabel("Total Debt")
+    ax6.grid(True)
+    st.pyplot(fig6)
 
     st.subheader("Sample Records")
 
