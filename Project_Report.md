@@ -1,192 +1,174 @@
-# 🌍 International Debt Analysis System - Project Report
+# International Debt Analysis Dashboard
 
-## 1. Introduction
+## 1. Project Title
 
-The International Debt Analysis System is a data analytics project developed using Python, SQLite, Streamlit, and SQL.
-
-This project analyzes debt information of different countries and indicators and provides meaningful insights using SQL analytical queries and interactive dashboards.
+**International Debt Analysis Dashboard using Python, SQLite and Streamlit**
 
 ---
 
-## 2. Problem Statement
+## 2. Objective
 
-International debt data contains a large number of records across countries and indicators.
+The main objective of this project is to analyze international debt data and provide meaningful insights through interactive dashboards and SQL analytics.
 
-Analyzing this data manually is difficult because:
+This project helps users:
 
-* Large volume of data
-* Missing values
-* Multiple metadata files
-* Difficult to compare countries and indicators
-* Hard to identify debt trends
-
-Therefore, an automated system is required to clean, process, analyze, and visualize the data.
-
----
-
-## 3. Objectives
-
-The main objectives of this project are:
-
-* Clean and preprocess debt datasets
-* Handle missing values
-* Convert data from wide format to long format
-* Merge metadata files
-* Store data in SQLite database
+* Analyze debt trends across years
+* Compare countries based on debt
+* Identify top debt indicators
 * Perform SQL analytical queries
-* Build an interactive dashboard
+* Visualize debt data using interactive charts
+
+---
+
+## 3. Technologies Used
+
+| Technology   | Purpose                  |
+| ------------ | ------------------------ |
+| Python       | Data Processing          |
+| Pandas       | Data Cleaning & Analysis |
+| SQLite       | Database Management      |
+| Streamlit    | Interactive Dashboard    |
+| Matplotlib   | Data Visualization       |
+| Git & GitHub | Version Control          |
 
 ---
 
 ## 4. Dataset Description
 
-The project uses the following datasets:
+The dataset contains international debt statistics with the following attributes:
 
-1. IDS_ALLCountries_Data.csv
-2. IDS_CountryMetaData.csv
-3. IDS_SeriesMetaData.csv
-4. IDS_FootNoteMetaData.csv
-5. Country-Series - Metadata.csv
+* Country Name
+* Country Code
+* Indicator Name
+* Indicator Code
+* Year
+* Debt Value
+* Region
+* Income Group
+* Lending Category
+* Currency Unit
 
-After cleaning and merging:
-
-* Total Records: 1,574,525
-* Total Columns: 15
-
----
-
-## 5. Data Preprocessing
-
-The following preprocessing steps were performed:
-
-### Step 1: Null Value Analysis
-
-* Checked null values in all year columns
-* Identified missing data
-
-### Step 2: Missing Value Handling
-
-* Forward Fill (ffill)
-* Backward Fill (bfill)
-
-### Step 3: Data Transformation
-
-* Converted wide format to long format using Pandas `melt()`.
-
-### Step 4: Metadata Integration
-
-Merged:
-
-* Country Metadata
-* Series Metadata
-
-to create a final master dataset.
+Total Records: **1,574,525**
 
 ---
 
-## 6. Database Creation
+## 5. Project Workflow
 
-SQLite database named:
+### Step 1: Data Collection
 
-```text
-international_debt.db
-```
+Collected international debt datasets and metadata.
 
-was created.
+### Step 2: Data Cleaning
 
-The cleaned dataset was inserted into:
+* Removed null values
+* Standardized column names
+* Merged metadata with debt dataset
 
-```text
-debt_data
-```
+### Step 3: Database Creation
 
-table.
+* Created SQLite database
+* Inserted cleaned dataset into `debt_data` table
 
-Database verification and SQL queries were performed using DBeaver.
+### Step 4: Dashboard Development
 
----
+Developed an interactive dashboard using Streamlit.
 
-## 7. SQL Analytical Questions
+### Step 5: Data Visualization
 
-The dashboard supports:
+Created advanced visualizations to analyze:
 
-### Basic Queries
-
-* Country count
-* Indicator count
-* Global debt
-* Unique indicators
-* Record count
-
-### Intermediate Queries
-
-* Top 10 countries
-* Average debt
-* Debt by indicator
-* Country ranking
-* Countries above global average
-
-### Advanced Queries
-
-* Top 5 indicators
-* Percentage contribution
-* Window functions
-* Debt categorization
-* Dominant indicator
-
-Total Questions Implemented:
-
-**30 SQL Analytical Questions**
+* Debt trend over years
+* Top countries by debt
+* Top debt indicators
+* Debt share analysis
+* Country comparison
+* Heatmap analysis
 
 ---
 
-## 8. Dashboard Features
+## 6. Features Implemented
 
-The Streamlit dashboard contains:
+### Overview Section
 
-* KPI Metrics
-* Dataset Overview
+* Total Records
+* Total Countries
+* Total Indicators
+* Total Global Debt
+* Year Range
+
+### Advanced Visual Analysis
+
+* Year Range Filter
+* Country Filter
+* Indicator Filter
+* KPI Cards
 * Year-wise Debt Trend
-* Top Countries by Debt
-* Top Indicators
-* SQL Questions Explorer
-* Country-wise Debt Analysis
-* Download Sample Dataset
+* Top 10 Countries Chart
+* Top 10 Indicators Chart
+* Pie Chart
+* Scatter Plot
+* Top Countries Comparison
+* Heatmap Visualization
+
+### SQL Analytical Questions
+
+Implemented **30 SQL Analytical Queries**
+
+* Basic Queries
+* Intermediate Queries
+* Advanced Queries
+* Window Functions
+* Ranking Queries
+* Percentage Contribution Analysis
+
+### Country Analysis
+
+* Country-wise Debt Trend
+* Top Indicators for Selected Country
+* Country Data Preview
+
+### Download Option
+
+* Download filtered dataset as CSV.
 
 ---
 
-## 9. Technologies Used
+## 7. Results
 
-* Python
-* Pandas
-* SQLite
-* DBeaver
-* Streamlit
-* Matplotlib
-* Git
-* GitHub
+The dashboard successfully provides:
 
----
+* Interactive debt analysis
+* Dynamic filtering options
+* Advanced visualizations
+* SQL-based analytical insights
+* Country-wise comparison
 
-## 10. Conclusion
-
-The International Debt Analysis System successfully analyzes international debt data using Python, SQL, SQLite, and Streamlit.
-
-The project provides:
-
-* Efficient data cleaning
-* Database management
-* SQL analytical insights
-* Interactive visualizations
-* User-friendly dashboard
-
-This system helps users understand global debt trends effectively and interactively.
+The project helps users understand global debt distribution and identify important financial indicators.
 
 ---
 
-## Author
+## 8. Future Enhancements
 
-**Terrax Jana**
+Future improvements include:
 
-BE Biomedical Engineering
-Final Year Student
+* Interactive Plotly Charts
+* Machine Learning based Debt Prediction
+* Real-time Data Integration
+* World Map Visualization
+* AI-powered Insights
+
+---
+
+## 9. Conclusion
+
+The International Debt Analysis Dashboard is a comprehensive data analytics project developed using Python, SQLite and Streamlit.
+
+The project demonstrates skills in:
+
+* Data Cleaning
+* Database Management
+* SQL Analytics
+* Data Visualization
+* Dashboard Development
+
+It provides an effective platform to analyze international debt trends and generate meaningful insights through interactive visualizations.
